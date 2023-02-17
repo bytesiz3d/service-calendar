@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { compareDatesWithoutTimes, getIsoDateStringWithoutTime } from '@/common/helpers';
 
 const { day, marked } = defineProps<{
 	day: Date,
 	marked?: boolean
 }>()
 
-const DAY_ID = getIsoDateStringWithoutTime(day);
+const DAY_ID = day.toDateString();
 
 function getDayClass() {
-	const result = compareDatesWithoutTimes(day, new Date());
+	const result = day.compareDays(Date.today());
 	return {
 		'text-decoration-line-through': result < 0,
 		'past': result < 0,

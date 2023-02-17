@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { getIsoDateStringWithoutTime, DATES } from '@/common/helpers';
+import { DATES } from '@/common';
 
 const emit = defineEmits<{(e: 'update:modelValue', date: Date): void}>()
 
@@ -8,7 +8,7 @@ const { modelValue: searchDate } = defineProps<{
 	modelValue: Date,
 }>()
 
-const isoDateString = ref(getIsoDateStringWithoutTime(searchDate))
+const isoDateString = ref(searchDate.toDateString())
 
 function goToDate(dateString: string) {
 	const candidate_date = new Date(dateString);
@@ -16,12 +16,12 @@ function goToDate(dateString: string) {
 		return;
 	candidate_date.setUTCHours(0, 0, 0, 0);
 
-	isoDateString.value = getIsoDateStringWithoutTime(candidate_date);
+	isoDateString.value = candidate_date.toDateString();
 	emit('update:modelValue', candidate_date);
 }
 
 function goToToday() {
-	goToDate(getIsoDateStringWithoutTime(new Date()))
+	goToDate(Date.today().toDateString())
 }
 
 </script>

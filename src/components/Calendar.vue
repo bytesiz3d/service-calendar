@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CalendarMonth from '@/components/CalendarMonth.vue';
-import { FirstDayOfEachMonthGenerator, getIsoDateStringWithoutTime, DATES } from '@/common/helpers';
+import { FirstDayOfEachMonthGenerator, DATES } from '@/common';
 import { watch, toRef, onMounted } from 'vue';
 
 const props = defineProps<{
@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 
 function scrollToDate(date: Date) {
-	const day_id = getIsoDateStringWithoutTime(date);
+	const day_id = date.toDateString();
 	const day_element = document.getElementById(day_id);
 	day_element?.scrollIntoView({block: 'center', inline: 'nearest'});
 }

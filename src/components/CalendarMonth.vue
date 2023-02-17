@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CalendarDay from '@/components/CalendarDay.vue';
-import { DAYS_IN_WEEK, DaysOfMonthGenerator, WeekdaysGenerator, datesMatchAlternatingWeeks, getMonthAndYearString, getDayOffsetOneBased, dateInBounds, DATES } from '@/common/helpers'
+import { DaysOfMonthGenerator, WeekdaysGenerator, DATES, DAYS_IN_WEEK } from '@/common'
+import type { StyleValue } from 'vue';
 
 const { firstDayOfMonth } = defineProps<{
 	firstDayOfMonth: Date,
@@ -9,25 +10,37 @@ const { firstDayOfMonth } = defineProps<{
 const weekdays = new WeekdaysGenerator(DATES.start);
 const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth);
 
+const monthStyle: StyleValue = {
+	'--bs-columns': DAYS_IN_WEEK, '--bs-gap': 0
+}
+
+function getDayOffsetOneBased(day: Date, startDay: Date): { gridColumnStart?: number } {
+	if (day.getDate() != 1) // not first day of the month
+		return {};
+
+	let offset = day.getDay() - startDay.getDay();
+	if (offset < 0) offset += DAYS_IN_WEEK;
+
+	return { gridColumnStart: offset + 1 };
+}
+
 </script>
 
 <template>
 	<div>
 		<div class="text-center">
-			<h1 class="mb-4">{{ getMonthAndYearString(firstDayOfMonth) }}</h1>
+			<h1 class="mb-4">{{ firstDayOfMonth.toMonthAndYearString() }}</h1>
 		</div>
-		<div class="grid" :style="{ '--bs-columns': DAYS_IN_WEEK, '--bs-gap': 0 }">
-			<p v-for="weekday in weekdays.gen()"
-				class="mb-1 text-center text-muted text-uppercase fw-bolder">
+		<div class="grid" :style="{...monthStyle}">
+			<p v-for="weekday in weekdays.gen()" class="mb-1 text-center text-muted text-uppercase fw-bolder">
 				{{ weekday }}
 			</p>
 
-			<CalendarDay v-for="day in daysOfMonth.gen()"
-				class="w-100" :style="{ ...getDayOffsetOneBased(day, DATES.start) }"
-				:day="day" :marked="datesMatchAlternatingWeeks(day, DATES.start) && dateInBounds(day, DATES.start, DATES.end)" />
+			<CalendarDay v-for="day in daysOfMonth.gen()" class="w-100"
+				:style="{ ...getDayOffsetOneBased(day, DATES.start) }" :day="day"
+				:marked="day.matchesAlternatingWeeks(DATES.start) && day.isInBounds(DATES.start, DATES.end)" />
 		</div>
 	</div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
