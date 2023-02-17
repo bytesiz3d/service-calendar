@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { getIsoDateStringWithoutTime } from '@/common/helpers';
+import { getIsoDateStringWithoutTime, DATES } from '@/common/helpers';
 
 const emit = defineEmits<{(e: 'update:modelValue', date: Date): void}>()
 
-const { startDate, endDate, modelValue } = defineProps<{
-	startDate: Date,
-	endDate: Date
+const { modelValue: searchDate } = defineProps<{
 	modelValue: Date,
 }>()
 
-const isoDateString = ref(getIsoDateStringWithoutTime(modelValue))
+const isoDateString = ref(getIsoDateStringWithoutTime(searchDate))
 
 function goToDate(dateString: string) {
 	const candidate_date = new Date(dateString);
@@ -34,7 +32,7 @@ function goToToday() {
 			<div>
 				<span class="navbar-brand h1">Service Calendar 9000</span>
 				<span class="navbar-text">
-					{{ startDate.toDateString() }} to {{ endDate.toDateString() }}
+					{{ DATES.start.toDateString() }} to {{ DATES.end.toDateString() }}
 				</span>
 			</div>
 

@@ -35,7 +35,7 @@ export class DaysOfMonthGenerator implements IGenerator<Date> {
 		const year = this.day.getFullYear();
 		const month = this.day.getMonth();
 
-		const count_days_in_month = new Date(year, month + 1, 0).getDate(); // last day of current month
+		const count_days_in_month = getNumberOfDaysInMonth(this.day);
 		for (let d = 1; d <= count_days_in_month; d++)
 			yield new Date(year, month, d);
 	}
@@ -81,6 +81,12 @@ export function getIsoDateStringWithoutTime(date: Date): string {
 	return date.toISOString().substring(0, 10);
 }
 
+export function getNumberOfDaysInMonth(date: Date): number {
+	const year = date.getFullYear();
+	const month = date.getMonth();
+	return new Date(year, month + 1, 0).getDate();
+}
+
 export function getMonthAndYearString(date: Date): string {
 	return date.toLocaleString('default', {
 		'month': 'long',
@@ -96,4 +102,13 @@ export function getDayOffsetOneBased(day: Date, startDay: Date): { gridColumnSta
 	if (offset < 0) offset += DAYS_IN_WEEK;
 
 	return { gridColumnStart: offset + 1 };
+}
+
+export function dateInBounds(day: Date, start: Date, end: Date) {
+	return day >= start && day < end;
+}
+
+export const DATES = {
+	start: new Date(2022, 10, 24),
+	end:   new Date(2023, 10, 25),
 }

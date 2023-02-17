@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import CalendarDay from '@/components/CalendarDay.vue';
-import { DAYS_IN_WEEK, DaysOfMonthGenerator, WeekdaysGenerator, datesMatchAlternatingWeeks, getMonthAndYearString, getDayOffsetOneBased } from '@/common/helpers'
+import { DAYS_IN_WEEK, DaysOfMonthGenerator, WeekdaysGenerator, datesMatchAlternatingWeeks, getMonthAndYearString, getDayOffsetOneBased, dateInBounds, DATES } from '@/common/helpers'
 
-const { firstDayOfMonth, startDate } = defineProps<{
+const { firstDayOfMonth } = defineProps<{
 	firstDayOfMonth: Date,
-	startDate: Date;
 }>()
 
-const weekdays = new WeekdaysGenerator(startDate);
+const weekdays = new WeekdaysGenerator(DATES.start);
 const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth);
 
 </script>
@@ -24,8 +23,8 @@ const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth);
 			</p>
 
 			<CalendarDay v-for="day in daysOfMonth.gen()"
-				class="w-100" :style="{ ...getDayOffsetOneBased(day, startDate) }"
-				:day="day" :marked="datesMatchAlternatingWeeks(day, startDate)" />
+				class="w-100" :style="{ ...getDayOffsetOneBased(day, DATES.start) }"
+				:day="day" :marked="datesMatchAlternatingWeeks(day, DATES.start) && dateInBounds(day, DATES.start, DATES.end)" />
 		</div>
 	</div>
 </template>
