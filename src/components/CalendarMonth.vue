@@ -10,18 +10,38 @@ const { firstDayOfMonth } = defineProps<{
 const weekdays = new WeekdaysGenerator(DATES.start).gen();
 const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth).gen();
 
-const monthStyle: StyleValue = {
-	'--bs-columns': DAYS_IN_WEEK, '--bs-gap': 0
-}
-
-function getDayOffsetOneBased(day: Date, startDay: Date): { gridColumnStart?: number } {
+function getWeekdayOffset(day: Date, weekday: number): number {
 	if (day.getDate() != 1) // not first day of the month
-		return {};
+		return 0;
 
-	let offset = day.getDay() - startDay.getDay();
+	let offset = day.getDay() - weekday;
 	if (offset < 0) offset += DAYS_IN_WEEK;
 
+	return offset;
+}
+
+function getGridColumnStartForWeekDay(day: Date, startDay: Date): { gridColumnStart?: number } {
+	let offset = getWeekdayOffset(day, startDay.getDay());
+	if (offset == 0)
+		return {};
+
 	return { gridColumnStart: offset + 1 };
+}
+
+function styleMonth(): StyleValue {
+	return {
+		'--bs-columns': DAYS_IN_WEEK, '--bs-gap': 0
+	}
+}
+
+function styleDay(day: Date): StyleValue {
+	return {
+		...getGridColumnStartForWeekDay(day, DATES.start),
+	}
+}
+
+function dayShouldBeMarked(day: Date): boolean {
+	return day.matchesAlternatingWeeks(DATES.start) && day.isInBounds(DATES.start, DATES.end);
 }
 
 </script>
@@ -31,14 +51,13 @@ function getDayOffsetOneBased(day: Date, startDay: Date): { gridColumnStart?: nu
 		<div class="text-center">
 			<h1 class="mb-4">{{ firstDayOfMonth.toMonthAndYearString() }}</h1>
 		</div>
-		<div class="grid" :style="{...monthStyle}">
+		<div class="grid" :style="styleMonth()">
 			<p v-for="weekday in weekdays" class="mb-1 text-center text-muted text-uppercase fw-bolder">
 				{{ weekday }}
 			</p>
 
-			<CalendarDay v-for="day in daysOfMonth" class="w-100"
-				:style="{ ...getDayOffsetOneBased(day, DATES.start) }" :day="day"
-				:marked="day.matchesAlternatingWeeks(DATES.start) && day.isInBounds(DATES.start, DATES.end)" />
+			<CalendarDay v-for="day in daysOfMonth" class="w-100" :style="styleDay(day)" :day="day"
+				:marked="dayShouldBeMarked(day)" />
 		</div>
 	</div>
 </template>
