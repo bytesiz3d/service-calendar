@@ -7,8 +7,8 @@ const { firstDayOfMonth } = defineProps<{
 	firstDayOfMonth: Date,
 }>()
 
-const weekdays = new WeekdaysGenerator(DATES.start);
-const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth);
+const weekdays = new WeekdaysGenerator(DATES.start).gen();
+const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth).gen();
 
 const monthStyle: StyleValue = {
 	'--bs-columns': DAYS_IN_WEEK, '--bs-gap': 0
@@ -32,11 +32,11 @@ function getDayOffsetOneBased(day: Date, startDay: Date): { gridColumnStart?: nu
 			<h1 class="mb-4">{{ firstDayOfMonth.toMonthAndYearString() }}</h1>
 		</div>
 		<div class="grid" :style="{...monthStyle}">
-			<p v-for="weekday in weekdays.gen()" class="mb-1 text-center text-muted text-uppercase fw-bolder">
+			<p v-for="weekday in weekdays" class="mb-1 text-center text-muted text-uppercase fw-bolder">
 				{{ weekday }}
 			</p>
 
-			<CalendarDay v-for="day in daysOfMonth.gen()" class="w-100"
+			<CalendarDay v-for="day in daysOfMonth" class="w-100"
 				:style="{ ...getDayOffsetOneBased(day, DATES.start) }" :day="day"
 				:marked="day.matchesAlternatingWeeks(DATES.start) && day.isInBounds(DATES.start, DATES.end)" />
 		</div>

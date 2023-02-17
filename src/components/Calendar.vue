@@ -16,13 +16,13 @@ function scrollToDate(date: Date) {
 onMounted(() => scrollToDate(props.searchDate))
 watch(toRef(props, 'searchDate'), (date: Date, _: Date) => scrollToDate(date))
 
-const firstDayOfEachMonth = new FirstDayOfEachMonthGenerator(DATES.start, DATES.end);
+const firstDayOfEachMonth = new FirstDayOfEachMonthGenerator(DATES.start, DATES.end).gen();
 
 </script>
 
 <template>
 	<div class="container">
-		<CalendarMonth v-for="day in firstDayOfEachMonth.gen()"
+		<CalendarMonth v-for="day in firstDayOfEachMonth"
 			class="my-5" :first-day-of-month="day" />
 	</div>
 </template>
