@@ -7,8 +7,8 @@ const { firstDayOfMonth } = defineProps<{
 	firstDayOfMonth: Date,
 }>()
 
-const weekdays = new WeekdaysGenerator(DATES.start).gen();
-const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth).gen();
+const weekdays = new WeekdaysGenerator(DATES.start);
+const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth);
 
 function getWeekdayOffset(day: Date, weekday: number): number {
 	if (day.getDate() != 1) // not first day of the month
@@ -52,11 +52,11 @@ function dayShouldBeMarked(day: Date): boolean {
 			<h1 class="mb-4">{{ firstDayOfMonth.toMonthAndYearString() }}</h1>
 		</div>
 		<div class="grid" :style="styleMonth()">
-			<p v-for="weekday in weekdays" class="mb-1 text-center text-muted text-uppercase fw-bolder">
+			<p v-for="weekday in weekdays.gen()" class="mb-1 text-center text-muted text-uppercase fw-bolder">
 				{{ weekday }}
 			</p>
 
-			<CalendarDay v-for="day in daysOfMonth" class="w-100" :style="styleDay(day)" :day="day"
+			<CalendarDay v-for="day in daysOfMonth.gen()" class="w-100" :style="styleDay(day)" :day="day"
 				:marked="dayShouldBeMarked(day)" />
 		</div>
 	</div>

@@ -11,6 +11,7 @@
     "deploy": "sh scripts/deploy.sh"
   },
   "dependencies": {
+    "pinia": "^2.0.30",
     "vue": "^3.2.45"
   },
   "devDependencies": {

@@ -1,29 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { DATES } from '@/common';
+import DatePicker from '@/components/DatePicker.vue';
 
-const emit = defineEmits<{(e: 'update:modelValue', date: Date): void}>()
-
-const { modelValue: searchDate } = defineProps<{
-	modelValue: Date,
+const emit = defineEmits<{(e: 'update:searchDate', date: Date): void}>()
+const { searchDate } = defineProps<{
+	searchDate: Date,
 }>()
 
-const isoDateString = ref(searchDate.toDateString())
-
-function goToDate(dateString: string) {
-	const candidate_date = new Date(dateString);
-	if (isNaN(candidate_date.getTime())) // invalid date
-		return;
-	candidate_date.setUTCHours(0, 0, 0, 0);
-
-	isoDateString.value = candidate_date.toDateString();
-	emit('update:modelValue', candidate_date);
+function update(date: Date) {
+	emit('update:searchDate', date);
 }
-
-function goToToday() {
-	goToDate(Date.today().toDateString())
-}
-
 </script>
 
 <template>
@@ -36,11 +22,7 @@ function goToToday() {
 				</span>
 			</div>
 
-			<div class="d-flex">
-				<input class="form-control me-2" type="search" placeholder="Search" v-model="isoDateString">
-				<button class="btn btn-outline-primary me-2" @click="goToDate(isoDateString)">Go</button>
-				<button class="btn btn-outline-success" @click="goToToday">Today</button>
-			</div>
+			<DatePicker :date="searchDate" @update:date="update"/>
 		</div>
 	</nav>
 </template>

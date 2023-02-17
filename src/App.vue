@@ -4,12 +4,12 @@ import { ref } from 'vue';
 import Calendar from '@/components/Calendar.vue';
 import Navbar from '@/components/Navbar.vue';
 
-const searchDate = ref(new Date());
+const searchDate = ref(Date.today());
 
 </script>
 
 <template>
-  <Navbar v-model="searchDate"/>
+  <Navbar v-model:searchDate="searchDate"/>
   <Calendar :searchDate="searchDate"/>
 </template>
 

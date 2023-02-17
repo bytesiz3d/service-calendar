@@ -9,6 +9,7 @@ declare global {
 		daysInMonth(): number;
 		toDateString(): string;
 		toMonthAndYearString(): string;
+		toMonthString(): string;
 		isInBounds(begin: Date, end: Date): boolean;
 		weekDifference(date: Date): number;
 		matchesAlternatingWeeks(date: Date): boolean;
@@ -34,6 +35,12 @@ Date.prototype.toMonthAndYearString = function (): string {
 	return this.toLocaleString('default', {
 		'month': 'long',
 		'year': 'numeric',
+	})
+}
+
+Date.prototype.toMonthString = function (): string {
+	return this.toLocaleString('default', {
+		'month': 'long',
 	})
 }
 

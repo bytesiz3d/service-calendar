@@ -1,4 +1,5 @@
-import { DAYS_IN_WEEK } from "./constants";
+import { DAYS_IN_WEEK, MONTHS_IN_YEAR } from "./constants";
+import type { SelectOption } from "./Types";
 
 export interface IGenerator<T> {
 	gen(): Generator<T, void, unknown>
@@ -43,6 +44,19 @@ export class DaysOfMonthGenerator implements IGenerator<Date> {
 	}
 }
 
+export class DayNumbersOfMonthGenerator implements IGenerator<number> {
+	private daysOfMonth: IGenerator<Date>;
+	constructor(day: Date) {
+		this.daysOfMonth = new DaysOfMonthGenerator(day);
+	}
+
+	*gen() {
+		for (let day of this.daysOfMonth.gen()) {
+			yield day.getDate();
+		}
+	}
+}
+
 export class WeekdaysGenerator implements IGenerator<string> {
 	private day: Date;
 
@@ -51,10 +65,33 @@ export class WeekdaysGenerator implements IGenerator<string> {
 	}
 
 	*gen() {
-		for (let d = 0; d < 7; d++) {
+		for (let d = 0; d < DAYS_IN_WEEK; d++) {
 			let day = new Date(this.day);
 			day.setDate(day.getDate() + d);
 			yield day.toLocaleString('default', { 'weekday': 'short' });
 		}
+	}
+}
+
+export class MonthNamesGenerator implements IGenerator<SelectOption<number>> {
+	*gen() {
+		for (let m = 0; m < MONTHS_IN_YEAR; m++) {
+			yield {
+				text: new Date(0, m, 1).toMonthString(), value: m
+			};
+		}
+	}
+}
+
+export class YearsInRangeGenerator implements IGenerator<number> {
+	private year: number;
+
+	constructor(year: number) {
+		this.year = year;
+	}
+
+	*gen() {
+		for (let y = this.year - 3; y < this.year + 3; y++)
+			yield y;
 	}
 }
