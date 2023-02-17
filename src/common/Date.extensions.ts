@@ -18,7 +18,9 @@ declare global {
 }
 
 Date.today = function (): Date {
-	return new Date();
+	const d = new Date();
+	d.setHours(0, 0, 0, 0);
+	return d;
 }
 
 Date.prototype.daysInMonth = function (): number {

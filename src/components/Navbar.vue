@@ -2,14 +2,6 @@
 import { DATES } from '@/common';
 import DatePicker from '@/components/DatePicker.vue';
 
-const emit = defineEmits<{(e: 'update:searchDate', date: Date): void}>()
-const { searchDate } = defineProps<{
-	searchDate: Date,
-}>()
-
-function update(date: Date) {
-	emit('update:searchDate', date);
-}
 </script>
 
 <template>
@@ -22,7 +14,7 @@ function update(date: Date) {
 				</span>
 			</div>
 
-			<DatePicker :date="searchDate" @update:date="update"/>
+			<DatePicker />
 		</div>
 	</nav>
 </template>

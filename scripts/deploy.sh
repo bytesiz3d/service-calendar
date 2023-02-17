@@ -3,16 +3,14 @@
 # abort on errors
 set -e
 
-# build
-yarn build
-
 # navigate into the build output directory
 cd dist
+rm -rf .git
 
 # place .nojekyll to bypass Jekyll processing
 echo > .nojekyll
 
-git init
+git init -b main
 git add -A
 git commit -m 'deploy'
 

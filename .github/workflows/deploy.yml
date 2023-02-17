@@ -19,7 +19,8 @@ jobs:
           yarn install --frozen-lockfile
           yarn build
 
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: dist
+      - name: Set execute permissions
+        run: chmod +x ./scripts/deploy.sh
+
+      - name: Run script
+        run: ./scripts/deploy.sh

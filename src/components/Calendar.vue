@@ -3,10 +3,6 @@ import CalendarMonth from '@/components/CalendarMonth.vue';
 import { FirstDayOfEachMonthGenerator, DATES } from '@/common';
 import { watch, toRef, onMounted } from 'vue';
 
-const props = defineProps<{
-	searchDate: Date
-}>()
-
 function scrollToDate(date: Date) {
 	const day_id = date.toDateString();
 	const day_element = document.getElementById(day_id);

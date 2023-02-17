@@ -29,5 +29,9 @@ export const useSearchDateStore = defineStore('searchDate', () => {
 		searchDate.value = d;
 	}
 
-	return { searchDate, update };
+	function $reset() {
+		searchDate.value = Date.today();
+	}
+
+	return { searchDate, update, $reset };
 })

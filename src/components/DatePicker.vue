@@ -1,20 +1,18 @@
 <script setup lang="ts">
 import { YearsInRangeGenerator, MonthNamesGenerator, DayNumbersOfMonthGenerator } from '@/common';
 import { reactive, computed, watch } from 'vue';
+import { useSearchDateStore } from '@/store';
 
-const emit = defineEmits<{ (e: 'update:date', date: Date): void }>()
-const { date } = defineProps<{
-	date: Date,
-}>()
+const { searchDate, update: updateSearchDate } = useSearchDateStore();
 
 const dateParts = reactive({
-	year: date.getFullYear(),
-	month: date.getMonth(),
-	day: date.getDate()
+	year: searchDate.getFullYear(),
+	month: searchDate.getMonth(),
+	day: searchDate.getDate()
 });
+
 watch(dateParts, ({ year, month, day }) => {
 	const d = new Date(year, month, day, 0, 0, 0, 0);
-	emit('update:date', d);
 })
 
 function updateToToday() { // FIXME: 3 EVENTS
