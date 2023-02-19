@@ -1,30 +1,32 @@
 <script setup lang="ts">
-import CalendarMonth from '@/components/CalendarMonth.vue';
-import { FirstDayOfEachMonthGenerator, getIsoDateStringWithoutTime } from '@/common/helpers';
-import { watch, toRef, onMounted } from 'vue';
+import CalendarMonth from "@/components/CalendarMonth.vue";
+import { FirstDayOfEachMonthGenerator, DATES } from "@/common";
+import { onMounted } from "vue";
+import { useSearchDateStore } from "@/store";
 
-const props = defineProps<{
-	startDate: Date,
-	endDate: Date
-	searchDate: Date
-}>()
+const searchDate = useSearchDateStore();
 
 function scrollToDate(date: Date) {
-	const day_id = getIsoDateStringWithoutTime(date);
-	const day_element = document.getElementById(day_id);
-	day_element?.scrollIntoView({block: 'center', inline: 'nearest'});
+  const day_id = date.toDateString();
+  const day_element = document.getElementById(day_id);
+  day_element?.scrollIntoView({ block: "center", inline: "nearest" });
 }
 
-onMounted(() => scrollToDate(props.searchDate))
-watch(toRef(props, 'searchDate'), (date: Date, _: Date) => scrollToDate(date))
+onMounted(() => scrollToDate(searchDate.searchDate));
+searchDate.$subscribe((_, { searchDate }) => scrollToDate(searchDate));
 
-const firstDayOfEachMonth = new FirstDayOfEachMonthGenerator(props.startDate, props.endDate);
-
+const firstDayOfEachMonth = new FirstDayOfEachMonthGenerator(
+  DATES.start,
+  DATES.end
+);
 </script>
 
 <template>
-	<div class="container">
-		<CalendarMonth v-for="day in firstDayOfEachMonth.gen()"
-			class="my-5" :first-day-of-month="day" :startDate="startDate" />
-	</div>
+  <div class="container">
+    <CalendarMonth
+      v-for="day in firstDayOfEachMonth.gen()"
+      class="my-5"
+      :first-day-of-month="day"
+    />
+  </div>
 </template>

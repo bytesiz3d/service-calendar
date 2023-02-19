@@ -1,51 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { getIsoDateStringWithoutTime } from '@/common/helpers';
+import DatePicker from "@/components/DatePicker.vue";
 
-const emit = defineEmits<{(e: 'update:modelValue', date: Date): void}>()
+const { useCarousel } = defineProps<{ useCarousel: boolean }>();
+const emit = defineEmits<{ (e: "update:useCarousel", value: boolean): void }>();
 
-const { startDate, endDate, modelValue } = defineProps<{
-	startDate: Date,
-	endDate: Date
-	modelValue: Date,
-}>()
-
-const isoDateString = ref(getIsoDateStringWithoutTime(modelValue))
-
-function goToDate(dateString: string) {
-	const candidate_date = new Date(dateString);
-	if (isNaN(candidate_date.getTime())) // invalid date
-		return;
-	candidate_date.setUTCHours(0, 0, 0, 0);
-
-	isoDateString.value = getIsoDateStringWithoutTime(candidate_date);
-	emit('update:modelValue', candidate_date);
+function toggleCarousel(e: Event) {
+  const check = e as unknown as { target: { checked: boolean } };
+  emit("update:useCarousel", check.target.checked);
 }
-
-function goToToday() {
-	goToDate(getIsoDateStringWithoutTime(new Date()))
-}
-
 </script>
 
 <template>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-		<div class="container-fluid">
-			<div>
-				<span class="navbar-brand h1">Service Calendar 9000</span>
-				<span class="navbar-text">
-					{{ startDate.toDateString() }} to {{ endDate.toDateString() }}
-				</span>
-			</div>
+  <nav
+    class="navbar navbar-expand-lg navbar-light bg-light sticky-top border-bottom"
+  >
+    <div class="container-fluid">
+      <div class="navbar-brand">
+        <span class="fs-3 g-col-12 g-col-md-6"> Service Calendar 9000 </span>
 
-			<div class="d-flex">
-				<input class="form-control me-2" type="search" placeholder="Search" v-model="isoDateString">
-				<button class="btn btn-outline-primary me-2" @click="goToDate(isoDateString)">Go</button>
-				<button class="btn btn-outline-success" @click="goToToday">Today</button>
-			</div>
-		</div>
-	</nav>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            :checked="useCarousel"
+            @change="toggleCarousel"
+          />
+          <label class="form-check-label fs-6">Compact</label>
+        </div>
+      </div>
+
+      <DatePicker />
+    </div>
+  </nav>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
