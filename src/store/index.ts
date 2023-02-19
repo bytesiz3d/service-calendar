@@ -1,37 +1,30 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import type { DateParts } from "@/common/types";
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
-interface DateParts
-{
-	year?: number
-	month?: number
-	day?: number
-}
+export const useSearchDateStore = defineStore("searchDate", () => {
+  const searchDate = ref(Date.today());
 
-export const useSearchDateStore = defineStore('searchDate', () => {
-	const searchDate = ref(Date.today());
+  function update(date: Date | DateParts) {
+    let d: Date;
 
-	function update(date: Date | DateParts) {
-		let d: Date;
+    if (date instanceof Date) {
+      d = new Date(date);
+    } else {
+      let year = date.year ?? searchDate.value.getFullYear();
+      let month = date.month ?? searchDate.value.getMonth();
+      let day = date.day ?? searchDate.value.getDate();
+      day = Math.min(day, Date.daysInMonth(month));
 
-		if (date instanceof Date) {
-			d = new Date(date);
-		} else  {
-			const { year, month, day } = date;
-			d = new Date(searchDate.value);
+      d = Date.fromParts({ year, month, day });
+    }
 
-			if (year) d.setFullYear(year);
-			if (month) d.setMonth(month);
-			if (day) d.setDate(day);
-		}
+    if (searchDate.value != d) searchDate.value = d;
+  }
 
-		d.setHours(0, 0, 0, 0);
-		searchDate.value = d;
-	}
+  function $reset() {
+    searchDate.value = Date.today();
+  }
 
-	function $reset() {
-		searchDate.value = Date.today();
-	}
-
-	return { searchDate, update, $reset };
-})
+  return { searchDate, update, $reset };
+});
