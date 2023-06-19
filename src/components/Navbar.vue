@@ -22,25 +22,39 @@ const dayIsFree = computed(
   () => !new Date(searchRef.value).matchesAlternatingWeeks(new Date(startRef.value))
 );
 
+const weeksLeft = computed(
+  () => {
+    const diff = DATES.end.weekDifference(Date.today());
+    return Math.ceil(diff / 2);
+  }
+);
+
 </script>
 
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top border-bottom">
     <div class="container-fluid">
       <div class="navbar-brand">
-        <span class="fs-3 g-col-12 g-col-md-6"> Service Calendar 9000 </span>
+        <span class="fs-3 g-col-12 g-col-md-6"> Service Calendar </span>
 
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" role="switch" :checked="useCarousel" @change="toggleCarousel" />
           <label class="form-check-label fs-6">Compact</label>
         </div>
+
+        <div class="d-flex g-col-12">
+          <div v-for="_ in weeksLeft" class="me-2">
+            <i class="bi bi-calendar-week-fill text-primary"></i>
+          </div>
+        </div>
       </div>
 
-      <div class="grid align-items-center">
+      <div class="grid align-items-center pe-2">
         <div class="input-group g-col-12 g-col-md-6">
           <i class="input-group-text bi bi-1-square"></i>
           <input id="startDate" type="date" class="form-control" v-model="startRef" />
         </div>
+
         <div class="input-group g-col-12 g-col-md-6">
           <i class="input-group-text bi bi-search"></i>
           <input id="searchDate" type="date" class="form-control" v-model="searchRef" />
