@@ -6,15 +6,19 @@ import {
   DATES,
   DAYS_IN_WEEK,
 } from "@/common";
-import type { StyleValue } from "vue";
+import { computed, type StyleValue } from "vue";
+import { useStartDateStore } from "@/store";
+import { storeToRefs } from "pinia";
 
 const { firstDayOfMonth } = defineProps<{
   firstDayOfMonth: Date;
 }>();
 
-const startDate = await DATES.start;
+const startStore = useStartDateStore();
+const { startDate: startRef } = storeToRefs(startStore);
+const startDate = computed(() => new Date(startRef.value));
 
-const weekdays = new WeekdaysGenerator(startDate);
+const weekdays = new WeekdaysGenerator(startDate.value);
 const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth);
 
 function getWeekdayOffset(day: Date, weekday: number): number {
@@ -47,14 +51,14 @@ function styleMonth(): StyleValue {
 
 function styleDay(day: Date): StyleValue {
   return {
-    ...getGridColumnStartForWeekDay(day, startDate),
+    ...getGridColumnStartForWeekDay(day, startDate.value),
   };
 }
 
 function dayShouldBeMarked(day: Date): boolean {
   return (
-    day.matchesAlternatingWeeks(startDate) &&
-    day.isInBounds(startDate, DATES.end)
+    day.matchesAlternatingWeeks(startDate.value) &&
+    day.isInBounds(startDate.value, DATES.end)
   );
 }
 </script>

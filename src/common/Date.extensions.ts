@@ -29,7 +29,7 @@ Date.today = function (): Date {
 
 Date.fromParts = function (parts: DateParts): Date {
   const { year, month, day } = parts;
-  return new Date(year, month, day, 0, 0, 0, 0);
+  return new Date(year, month, day, -(new Date().getTimezoneOffset() / 60), 0, 0, 0);
 };
 
 Date.daysInMonth = function (monthIndex: number): number {

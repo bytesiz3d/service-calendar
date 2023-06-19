@@ -4,8 +4,6 @@ const { day, marked } = defineProps<{
   marked?: boolean;
 }>();
 
-const DAY_ID = day.toDateString();
-
 function getDayClass() {
   const result = day.compareDays(Date.today());
   return {
@@ -18,7 +16,7 @@ function getDayClass() {
 </script>
 
 <template>
-  <div :id="DAY_ID" class="day-container py-2" :class="getDayClass()">
+  <div :id="day.toDateString()" class="day-container py-2" :class="getDayClass()">
     <div class="day-circle">
       {{ day.getDate() }}
     </div>

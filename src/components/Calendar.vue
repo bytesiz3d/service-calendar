@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import CalendarMonth from "@/components/CalendarMonth.vue";
 import { FirstDayOfEachMonthGenerator, DATES } from "@/common";
-import { onMounted } from "vue";
-import { useSearchDateStore } from "@/store";
+import { computed, onMounted } from "vue";
+import { useSearchDateStore, useStartDateStore } from "@/store";
 import { Carousel } from "bootstrap";
+import { storeToRefs } from "pinia";
 
 const { useCarousel } = defineProps<{ useCarousel: boolean }>();
-const searchDate = useSearchDateStore();
-const startDate = await DATES.start;
+const searchStore = useSearchDateStore();
+
+const startStore = useStartDateStore();
+const { startDate: startRef } = storeToRefs(startStore);
+const startDate = computed(() => new Date(startRef.value));
 
 function scrollToDate(dateString: string) {
   if (useCarousel)
   {
     const carouselElement = document.querySelector('#monthCarousel');
     const carousel = new Carousel(carouselElement ?? "");
-    carousel.to(new Date(dateString).getMonth() - startDate.getMonth());
+    carousel.to(new Date(dateString).getMonth() - new Date(startDate.value).getMonth());
   }
   else
   {
@@ -23,11 +27,11 @@ function scrollToDate(dateString: string) {
   }
 }
 
-onMounted(() => scrollToDate(searchDate.searchDate));
-searchDate.$subscribe((_, { searchDate }) => scrollToDate(searchDate));
+onMounted(() => scrollToDate(searchStore.searchDate));
+searchStore.$subscribe((_, { searchDate }) => scrollToDate(searchDate));
 
 const firstDayOfEachMonth = new FirstDayOfEachMonthGenerator(
-  startDate,
+  startDate.value,
   DATES.end
 );
 </script>

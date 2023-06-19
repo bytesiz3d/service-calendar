@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useSearchDateStore } from "@/store";
+import { useStartDateStore, useSearchDateStore } from "@/store";
 import { DATES } from "@/common";
 import { computed } from "vue";
 
@@ -10,15 +10,16 @@ const emit = defineEmits<{ (e: "update:useCarousel", value: boolean): void }>();
 const searchStore = useSearchDateStore();
 const { searchDate: searchRef } = storeToRefs(searchStore);
 
+const startStore = useStartDateStore();
+const { startDate: startRef } = storeToRefs(startStore);
+
 function toggleCarousel(e: Event) {
   const check = e as unknown as { target: { checked: boolean } };
   emit("update:useCarousel", check.target.checked);
 }
 
-const startDate = await DATES.start;
-
 const dayIsFree = computed(
-  () => !new Date(searchRef.value).matchesAlternatingWeeks(startDate)
+  () => !new Date(searchRef.value).matchesAlternatingWeeks(new Date(startRef.value))
 );
 
 </script>
@@ -35,16 +36,20 @@ const dayIsFree = computed(
         </div>
       </div>
 
-      <div class="d-flex w-25 align-items-center">
-        <div class="input-group">
+      <div class="grid align-items-center">
+        <div class="input-group g-col-12 g-col-md-6">
+          <i class="input-group-text bi bi-1-square"></i>
+          <input id="startDate" type="date" class="form-control" v-model="startRef" />
+        </div>
+        <div class="input-group g-col-12 g-col-md-6">
           <i class="input-group-text bi bi-search"></i>
           <input id="searchDate" type="date" class="form-control" v-model="searchRef" />
-        </div>
-        <div class="ms-2">
-          <i class="bi fs-3" :class="[dayIsFree
-            ? ['bi-check-circle-fill', 'text-success']
-            : ['bi-x-circle-fill', 'text-danger']
-          ]"/>
+          <div class="ms-2">
+            <i class="bi fs-3" :class="[dayIsFree
+              ? ['bi-check-circle-fill', 'text-success']
+              : ['bi-x-circle-fill', 'text-danger']
+            ]"/>
+          </div>
         </div>
       </div>
     </div>
