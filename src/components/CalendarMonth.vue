@@ -12,7 +12,9 @@ const { firstDayOfMonth } = defineProps<{
   firstDayOfMonth: Date;
 }>();
 
-const weekdays = new WeekdaysGenerator(DATES.start);
+const startDate = await DATES.start;
+
+const weekdays = new WeekdaysGenerator(startDate);
 const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth);
 
 function getWeekdayOffset(day: Date, weekday: number): number {
@@ -45,14 +47,14 @@ function styleMonth(): StyleValue {
 
 function styleDay(day: Date): StyleValue {
   return {
-    ...getGridColumnStartForWeekDay(day, DATES.start),
+    ...getGridColumnStartForWeekDay(day, startDate),
   };
 }
 
 function dayShouldBeMarked(day: Date): boolean {
   return (
-    day.matchesAlternatingWeeks(DATES.start) &&
-    day.isInBounds(DATES.start, DATES.end)
+    day.matchesAlternatingWeeks(startDate) &&
+    day.isInBounds(startDate, DATES.end)
   );
 }
 </script>

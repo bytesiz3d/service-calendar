@@ -7,8 +7,12 @@ const useCarousel = ref(false);
 </script>
 
 <template>
-  <Navbar v-model:useCarousel="useCarousel" />
-  <Calendar />
+  <Suspense>
+    <Navbar v-model:useCarousel="useCarousel" />
+  </Suspense>
+  <Suspense>
+    <Calendar :useCarousel="useCarousel"/>
+  </Suspense>
 </template>
 
 <style scoped></style>
