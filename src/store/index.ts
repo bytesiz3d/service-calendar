@@ -1,39 +1,36 @@
+import { Day } from "@/common";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useStartDateStore = defineStore("startDate", () => {
-  const startDate = ref(Date.fromParts({year: 2023, month: 6, day: 3}).toDateString());
+  const startDate = ref("2022-11-21");
 
-  function update(date: Date | string) {
-    let d = new Date(date);
-    const year = d.getFullYear();
-    const month = d.getMonth();
-    const day = d.getDate();
-    d = Date.fromParts({year, month, day});
+  function update(day: string | number | Date) {
+    const d = new Day(day);
 
-    if (startDate.value !== d.toDateString())
-      startDate.value = d.toDateString();
+    if (startDate.value !== d.toString())
+      startDate.value = d.toString();
   }
 
   function $reset() {
-    startDate.value = Date.today().toDateString();
+    startDate.value = Day.today().toString();
   }
 
   return { startDate, update, $reset };
 });
 
 export const useSearchDateStore = defineStore("searchDate", () => {
-  const searchDate = ref(Date.today().toDateString());
+  const searchDate = ref(Day.today().toString());
 
-  function update(date: Date | string) {
-    const d = new Date(date);
+  function update(day: Day | string) {
+    const d = new Day(day);
 
-    if (searchDate.value !== d.toDateString())
-      searchDate.value = d.toDateString();
+    if (searchDate.value !== d.toString())
+      searchDate.value = d.toString();
   }
 
   function $reset() {
-    searchDate.value = Date.today().toDateString();
+    searchDate.value = Day.today().toString();
   }
 
   return { searchDate, update, $reset };

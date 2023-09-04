@@ -5,7 +5,6 @@ import App from "./App.vue";
 import "@/styles/base.scss";
 import "bootstrap";
 
-import "@/common/Date.extensions";
 import "@/common/Array.extensions";
 import "@/common/types";
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CalendarMonth from "@/components/CalendarMonth.vue";
-import { FirstDayOfEachMonthGenerator, DATES } from "@/common";
+import { FirstDayOfEachMonthGenerator, DATES, Day } from "@/common";
 import { computed, onMounted } from "vue";
 import { useSearchDateStore, useStartDateStore } from "@/store";
 import { Carousel } from "bootstrap";
@@ -11,7 +11,7 @@ const searchStore = useSearchDateStore();
 
 const startStore = useStartDateStore();
 const { startDate: startRef } = storeToRefs(startStore);
-const startDate = computed(() => new Date(startRef.value));
+const startDate = computed(() => new Day(startRef.value));
 
 function scrollToDate(dateString: string) {
   if (useCarousel)

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useStartDateStore, useSearchDateStore } from "@/store";
-import { DATES } from "@/common";
+import { DATES, Day } from "@/common";
 import { computed } from "vue";
 
 const { useCarousel } = defineProps<{ useCarousel: boolean }>();
@@ -19,12 +19,12 @@ function toggleCarousel(e: Event) {
 }
 
 const dayIsFree = computed(
-  () => !new Date(searchRef.value).matchesAlternatingWeeks(new Date(startRef.value))
+  () => !new Day(searchRef.value).matchesAlternatingWeeks(new Day(startRef.value))
 );
 
 const weeksLeft = computed(
   () => {
-    const diff = DATES.end.weekDifference(Date.today());
+    const diff = DATES.end.weekDifference(Day.today());
     return Math.ceil(diff / 2);
   }
 );

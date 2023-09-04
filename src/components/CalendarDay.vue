@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { Day } from "@/common";
+
 const { day, marked } = defineProps<{
-  day: Date;
+  day: Day;
   marked?: boolean;
 }>();
 
 function getDayClass() {
-  const result = day.compareDays(Date.today());
+  const result = day.compareMS(Day.today());
   return {
     "text-decoration-line-through": result < 0,
     past: result < 0,
@@ -16,7 +18,7 @@ function getDayClass() {
 </script>
 
 <template>
-  <div :id="day.toDateString()" class="day-container py-2" :class="getDayClass()">
+  <div :id="day.toString()" class="day-container py-2" :class="getDayClass()">
     <div class="day-circle">
       {{ day.getDate() }}
     </div>
