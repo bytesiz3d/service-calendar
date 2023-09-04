@@ -29,6 +29,13 @@ const weeksLeft = computed(
   }
 );
 
+const weeksTotal = computed(
+  () => {
+    const diff = DATES.end.weekDifference(new Day(startRef.value));
+    return Math.ceil(diff / 2);
+  }
+)
+
 </script>
 
 <template>
@@ -42,9 +49,12 @@ const weeksLeft = computed(
           <label class="form-check-label fs-6">Compact</label>
         </div>
 
-        <div class="d-flex g-col-12">
+        <div class="d-flex flex-wrap g-col-12">
           <div v-for="_ in weeksLeft" class="me-2">
             <i class="bi bi-calendar-week-fill text-primary"></i>
+          </div>
+          <div v-for="_ in weeksTotal - weeksLeft" class="me-2">
+            <i class="bi bi-calendar-week-fill text-secondary"></i>
           </div>
         </div>
       </div>
