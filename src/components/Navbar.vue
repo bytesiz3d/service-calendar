@@ -40,26 +40,24 @@ const weeksTotal = computed(
 
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top border-bottom">
-    <div class="container-fluid">
-      <div class="navbar-brand">
-        <span class="fs-3 g-col-12 g-col-md-6"> Service Calendar </span>
+    <div class="container-fluid" style="column-gap: .5rem;">
+      <div class="navbar-brand me-0">
+        <span class="fs-2">Service Calendar</span>
 
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" role="switch" :checked="useCarousel" @change="toggleCarousel" />
-          <label class="form-check-label fs-6">Compact</label>
-        </div>
-
-        <div class="d-flex flex-wrap g-col-12">
-          <div v-for="_ in weeksLeft" class="me-2">
+        <div class="d-flex flex-wrap fs-5" style="column-gap: .5rem;">
+          <div v-for="_ in weeksLeft">
             <i class="bi bi-calendar-week-fill text-primary"></i>
           </div>
-          <div v-for="_ in weeksTotal - weeksLeft" class="me-2">
+          <div v-for="_ in weeksTotal - weeksLeft">
             <i class="bi bi-calendar-week-fill text-secondary"></i>
+          </div>
+          <div>
+            <span class="fw-bold">{{weeksTotal - weeksLeft}} / {{weeksTotal}}</span>
           </div>
         </div>
       </div>
 
-      <div class="grid align-items-center pe-2">
+      <div class="grid flex-grow-1" style="row-gap: 0.25rem; max-width: 600px;">
         <div class="input-group g-col-12 g-col-md-6">
           <i class="input-group-text bi bi-1-square"></i>
           <input id="startDate" type="date" class="form-control" v-model="startRef" />
@@ -68,12 +66,18 @@ const weeksTotal = computed(
         <div class="input-group g-col-12 g-col-md-6">
           <i class="input-group-text bi bi-search"></i>
           <input id="searchDate" type="date" class="form-control" v-model="searchRef" />
-          <div class="ms-2">
-            <i class="bi fs-3" :class="[dayIsFree
+
+          <span class="input-group-text">
+            <i class="bi fs-4 lh-1" :class="[dayIsFree
               ? ['bi-check-circle-fill', 'text-success']
               : ['bi-x-circle-fill', 'text-danger']
             ]"/>
-          </div>
+          </span>
+        </div>
+
+        <div class="form-check form-switch g-col-12">
+          <input class="form-check-input" type="checkbox" role="switch" :checked="useCarousel" @change="toggleCarousel" />
+          <label class="form-check-label fs-6">Compact</label>
         </div>
       </div>
     </div>
