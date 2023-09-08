@@ -1,11 +1,11 @@
 export class Day extends Date {
-  constructor(day?: string | number | Date) {
-    if (day)
-      super(day);
+  constructor(date?: string | number | Date) {
+    if (date)
+      super(date);
     else
       super();
 
-    this.setUTCHours(0, 0, 0, 0);
+    this.setMinutes(-this.getTimezoneOffset());
   }
 
   static today(): Day {
