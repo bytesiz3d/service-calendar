@@ -22,22 +22,11 @@ const startDate = computed(() => new Day(startRef.value));
 const weekdays = new WeekdaysGenerator(startDate.value);
 const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth);
 
-function getWeekdayOffset(day: Day, weekday: number): number {
-  if (day.getDate() != 1)
-    // not first day of the month
-    return 0;
-
-  let offset = day.getDay() - weekday;
-  if (offset < 0) offset += DAYS_IN_WEEK;
-
-  return offset;
-}
-
 function getGridColumnStartForWeekDay(
   day: Day,
   startDay: Day
 ): { gridColumnStart?: number } {
-  let offset = getWeekdayOffset(day, startDay.getDay());
+  let offset = day.getWeekdayOffset(startDay.getDay());
   if (offset == 0) return {};
 
   return { gridColumnStart: offset + 1 };

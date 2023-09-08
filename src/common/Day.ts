@@ -52,4 +52,15 @@ export class Day extends Date {
   matchesAlternatingWeeks(day: Day): boolean {
     return this.weekDifference(day) % 2 == 0;
   }
+
+  getWeekdayOffset(weekday: number): number {
+    if (this.getDate() != 1)
+      // not first day of the month
+      return 0;
+
+    let offset = this.getDay() - weekday;
+    if (offset < 0) offset += 7;
+
+    return offset;
+  }
 }
