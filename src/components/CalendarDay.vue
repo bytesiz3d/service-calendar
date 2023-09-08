@@ -7,11 +7,12 @@ const { day, marked } = defineProps<{
 }>();
 
 function getDayClass() {
-  const result = day.compareMS(Day.today());
+  const today = Day.today();
+  const result = day.compareMS(today);
   return {
     "text-decoration-line-through": result < 0,
     past: result < 0,
-    today: result == 0,
+    today: today.getFullYear() == day.getFullYear() && today.getMonth() == day.getMonth() && today.getDate() == day.getDate(),
     marked,
   };
 }
