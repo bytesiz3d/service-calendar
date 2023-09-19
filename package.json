@@ -15,6 +15,7 @@
     "vue": "^3.2.45"
   },
   "devDependencies": {
+    "@chenfengyuan/vue-countdown": "2",
     "@popperjs/core": "^2.11.6",
     "@types/bootstrap": "^5.2.6",
     "@types/node": "^18.11.12",
