@@ -60,7 +60,7 @@ const weeksTotal = computed(
         </div>
         <vue-countdown class="fs-6" :time="DATES.end.getTime() - Day.today().getTime()"
           v-slot="{ days, hours, minutes, seconds }">
-          {{ days }} days, {{ hours }} hours, {{ minutes }} minutes, {{ seconds }} seconds.
+          {{ days }} days, {{ hours }} hours, {{ minutes }} minutes, {{ seconds }} seconds
         </vue-countdown>
       </div>
 
