@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useStartDateStore, useSearchDateStore } from "@/store";
-import { DATES, Day } from "@/common";
 import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useDateRangeStore, useSearchDateStore } from "@/store";
+import { Day } from "@/common";
+import '@vuepic/vue-datepicker/dist/main.css'
+import VueDatePicker from '@vuepic/vue-datepicker'
+import VueCountdown from '@chenfengyuan/vue-countdown';
 
 const { useCarousel } = defineProps<{ useCarousel: boolean }>();
 const emit = defineEmits<{ (e: "update:useCarousel", value: boolean): void }>();
@@ -10,8 +13,8 @@ const emit = defineEmits<{ (e: "update:useCarousel", value: boolean): void }>();
 const searchStore = useSearchDateStore();
 const { searchDate: searchRef } = storeToRefs(searchStore);
 
-const startStore = useStartDateStore();
-const { startDate: startRef } = storeToRefs(startStore);
+const dateRangeStore = useDateRangeStore();
+const { dateRange, START, END, weeksLeft, weeksTotal } = storeToRefs(dateRangeStore);
 
 function toggleCarousel(e: Event) {
   const check = e as unknown as { target: { checked: boolean } };
@@ -19,22 +22,8 @@ function toggleCarousel(e: Event) {
 }
 
 const dayIsFree = computed(
-  () => !new Day(searchRef.value).matchesAlternatingWeeks(new Day(startRef.value))
+  () => !new Day(searchRef.value).matchesAlternatingWeeks(START.value)
 );
-
-const weeksLeft = computed(
-  () => {
-    const diff = DATES.end.weekDifference(Day.today());
-    return Math.ceil(diff / 2);
-  }
-);
-
-const weeksTotal = computed(
-  () => {
-    const diff = DATES.end.weekDifference(new Day(startRef.value));
-    return Math.ceil(diff / 2);
-  }
-)
 
 </script>
 
@@ -48,32 +37,31 @@ const weeksTotal = computed(
         <i class="navbar-toggler-icon"></i>
       </button>
 
-      <div class="d-flex flex-wrap fs-5" style="column-gap: .5rem;">
-        <div v-for="_ in weeksLeft">
-          <i class="bi bi-calendar-week-fill text-primary"></i>
+      <div>
+        <div class="d-flex flex-wrap fs-5" style="column-gap: .5rem;">
+          <div v-for="_ in weeksLeft">
+            <i class="bi bi-calendar-week-fill text-primary"></i>
+          </div>
+          <div v-for="_ in weeksTotal - weeksLeft">
+            <i class="bi bi-calendar-week-fill text-secondary"></i>
+          </div>
+          <div class="fw-bold">
+            {{ weeksTotal - weeksLeft }} / {{ weeksTotal }}
+          </div>
         </div>
-        <div v-for="_ in weeksTotal - weeksLeft">
-          <i class="bi bi-calendar-week-fill text-secondary"></i>
-        </div>
-        <div class="fw-bold">
-          {{ weeksTotal - weeksLeft }} / {{ weeksTotal }}
-        </div>
-        <vue-countdown class="fs-6" :time="DATES.end.getTime() - Day.today().getTime()"
+        <VueCountdown class="fs-6" :time="END.getTime() - new Date().getTime()"
           v-slot="{ days, hours, minutes, seconds }">
           {{ days }} days, {{ hours }} hours, {{ minutes }} minutes, {{ seconds }} seconds
-        </vue-countdown>
+        </VueCountdown>
       </div>
 
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <div class="grid flex-grow-1" style="row-gap: 0.25rem; max-width: 600px;">
-            <div class="input-group g-col-12 g-col-md-6">
-              <i class="input-group-text bi bi-1-square"></i>
-              <input id="startDate" type="date" class="form-control" v-model="startRef" />
-            </div>
+        <div class="navbar-nav w-100">
+          <div class="grid flex-grow-1" style="row-gap: 0.25rem;">
+            <VueDatePicker class="g-col-12" range v-model="dateRange" format="MM/dd/yyyy" :enable-time-picker="false" :clearable="false" />
 
-            <div class="input-group g-col-12 g-col-md-6">
-              <i class="input-group-text bi bi-search"></i>
+            <div class="input-group g-col-12">
+              <i class="input-group-text bi bi-search" />
               <input id="searchDate" type="date" class="form-control" v-model="searchRef" />
 
               <span class="input-group-text">

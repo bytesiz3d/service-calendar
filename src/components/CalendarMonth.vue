@@ -3,32 +3,25 @@ import CalendarDay from "@/components/CalendarDay.vue";
 import {
   DaysOfMonthGenerator,
   WeekdaysGenerator,
-  DATES,
   DAYS_IN_WEEK,
   Day,
 } from "@/common";
-import { computed, type StyleValue } from "vue";
-import { useStartDateStore } from "@/store";
+
+import type { StyleValue } from "vue";
+import { useDateRangeStore } from "@/store";
 import { storeToRefs } from "pinia";
 
-const { firstDayOfMonth } = defineProps<{
-  firstDayOfMonth: Day;
-}>();
+const { firstDayOfMonth } = defineProps<{ firstDayOfMonth: Day }>();
 
-const startStore = useStartDateStore();
-const { startDate: startRef } = storeToRefs(startStore);
-const startDate = computed(() => new Day(startRef.value));
+const dateRangeStore = useDateRangeStore();
+const { START, END } = storeToRefs(dateRangeStore);
 
-const weekdays = new WeekdaysGenerator(startDate.value);
+const weekdays = new WeekdaysGenerator(START.value);
 const daysOfMonth = new DaysOfMonthGenerator(firstDayOfMonth);
 
-function getGridColumnStartForWeekDay(
-  day: Day,
-  startDay: Day
-): { gridColumnStart?: number } {
+function getGridColumnStartForWeekDay(day: Day, startDay: Day): { gridColumnStart?: number } {
   let offset = day.getWeekdayOffset(startDay.getDay());
   if (offset == 0) return {};
-
   return { gridColumnStart: offset + 1 };
 }
 
@@ -41,14 +34,14 @@ function styleMonth(): StyleValue {
 
 function styleDay(day: Day): StyleValue {
   return {
-    ...getGridColumnStartForWeekDay(day, startDate.value),
+    ...getGridColumnStartForWeekDay(day, START.value),
   };
 }
 
 function dayShouldBeMarked(day: Day): boolean {
   return (
-    day.matchesAlternatingWeeks(startDate.value) &&
-    day.isInBounds(startDate.value, DATES.end)
+    day.matchesAlternatingWeeks(START.value) &&
+    day.isInBounds(START.value, END.value)
   );
 }
 </script>

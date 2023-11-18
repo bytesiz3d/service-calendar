@@ -1,22 +1,21 @@
 import { Day } from "@/common";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
-export const useStartDateStore = defineStore("startDate", () => {
-  const startDate = ref("2022-11-21");
+export const useDateRangeStore = defineStore("dateRange", () => {
+  const dateRange = ref(["2022-11-21", "2023-11-27"]);
 
-  function update(day: string | number | Date) {
-    const d = new Day(day);
+  const START = computed(() => new Day(dateRange.value[0]))
+  const END = computed(() => new Day(dateRange.value[1]))
 
-    if (startDate.value !== d.toString())
-      startDate.value = d.toString();
-  }
+  const weeksLeft = computed(() => Math.ceil(END.value.weekDifference(Day.today())/ 2))
+  const weeksTotal = computed(() => Math.ceil(END.value.weekDifference(START.value)/ 2))
 
   function $reset() {
-    startDate.value = "2022-11-21";
+    dateRange.value = ["2022-11-21", "2023-11-27"];
   }
 
-  return { startDate, update, $reset };
+  return { dateRange, START, END, weeksLeft, weeksTotal, $reset };
 });
 
 export const useSearchDateStore = defineStore("searchDate", () => {

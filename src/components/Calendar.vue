@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import CalendarMonth from "@/components/CalendarMonth.vue";
-import { FirstDayOfEachMonthGenerator, DATES, Day } from "@/common";
-import { computed, onMounted } from "vue";
-import { useSearchDateStore, useStartDateStore } from "@/store";
+import { FirstDayOfEachMonthGenerator, Day } from "@/common";
+import { computed, onMounted, watch } from "vue";
+import { useSearchDateStore, useDateRangeStore } from "@/store";
 import { storeToRefs } from "pinia";
 
-const { useCarousel } = defineProps<{ useCarousel: boolean }>();
+const props = defineProps<{ useCarousel: boolean }>();
 
 const searchStore = useSearchDateStore();
 const { searchDate: searchRef } = storeToRefs(searchStore);
 const searchDate = computed(() => new Day(searchRef.value));
 
-const startStore = useStartDateStore();
-const { startDate: startRef } = storeToRefs(startStore);
-const startDate = computed(() => new Day(startRef.value));
+const dateRangeStore = useDateRangeStore();
+const { START, END } = storeToRefs(dateRangeStore);
 
 function scrollToDate(dateString: string) {
   const day_element = document.getElementById(dateString);
@@ -21,7 +20,7 @@ function scrollToDate(dateString: string) {
 }
 
 const scrollToCarouselIndex = computed(() => {
-  const gen = new FirstDayOfEachMonthGenerator(startDate.value, DATES.end);
+  const gen = new FirstDayOfEachMonthGenerator(START.value, END.value);
 
   return [...gen.gen()]
     .findIndex((firstDay: Day) => firstDay.getFullYear() == searchDate.value.getFullYear()
@@ -31,14 +30,16 @@ const scrollToCarouselIndex = computed(() => {
 onMounted(() => scrollToDate(searchStore.searchDate));
 searchStore.$subscribe((_, { searchDate }) => scrollToDate(searchDate));
 
-const firstDayOfEachMonth = new FirstDayOfEachMonthGenerator(
-  startDate.value,
-  DATES.end
-);
+watch(() => props.useCarousel, (useCarousel) => {
+  if (useCarousel == false)
+    scrollToDate(searchStore.searchDate);
+})
+
+const firstDayOfEachMonth = new FirstDayOfEachMonthGenerator(START.value, END.value);
 </script>
 
 <template>
-  <div class="container" v-if="useCarousel == false">
+  <div class="container" v-if="props.useCarousel == false">
     <CalendarMonth v-for="day in firstDayOfEachMonth.gen()" class="my-5" :first-day-of-month="day" />
   </div>
 
