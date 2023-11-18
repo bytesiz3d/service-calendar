@@ -5,7 +5,7 @@ export class Day extends Date {
     else
       super();
 
-    this.setMinutes(-this.getTimezoneOffset());
+    this.setUTCHours(0, -this.getTimezoneOffset(), 0, 0)
   }
 
   static today(): Day {

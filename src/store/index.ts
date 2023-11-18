@@ -13,7 +13,7 @@ export const useStartDateStore = defineStore("startDate", () => {
   }
 
   function $reset() {
-    startDate.value = Day.today().toString();
+    startDate.value = "2022-11-21";
   }
 
   return { startDate, update, $reset };

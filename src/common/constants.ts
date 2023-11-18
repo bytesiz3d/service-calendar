@@ -5,6 +5,6 @@ export const MONTHS_IN_YEAR = 12;
 
 export class DATES {
   static get end(): Day {
-    return new Day("2023-11-25");
+    return new Day("2023-11-27");
   }
 }
