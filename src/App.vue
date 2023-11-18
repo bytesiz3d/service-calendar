@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useDateRangeStore } from "@/store";
-import Calendar from "@/components/Calendar.vue";
+import Calendar from "@/views/Calendar.vue";
+import Finished from "@/views/Finished.vue";
 import Navbar from "@/components/Navbar.vue";
 import { ref, onBeforeMount } from "vue";
 
@@ -25,6 +26,7 @@ const useCarousel = ref(false);
   <Suspense>
     <Calendar :useCarousel="useCarousel"/>
   </Suspense>
+  <Finished v-if="weeksLeft <= 0"  />
 </template>
 
 <style scoped></style>
