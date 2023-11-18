@@ -24,7 +24,7 @@ const IMG_CONGRATS = 'https://media.tenor.com/lxlmVWCDHi0AAAAC/adel-emam.gif'
           <img :src="IMG_CONGRATS" class="img-fluid img-thumbnail mb-2" />
           <iframe style="border-radius:12px"
             src="https://open.spotify.com/embed/playlist/6ThcvROZOpcYHEHEVWhk6T?utm_source=generator&theme=0" width="100%"
-            height="152" frameBorder="0" allowfullscreen=""
+            height="152" frameBorder="0" allowfullscreen
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </div>
         <form :action="GOTO" class="w-100 modal-footer">
